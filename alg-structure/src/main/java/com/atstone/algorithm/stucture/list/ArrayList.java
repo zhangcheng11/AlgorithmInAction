@@ -1,14 +1,11 @@
-package com.atstone.algorithm.stucture.array;
+package com.atstone.algorithm.stucture.list;
 
 import java.util.Arrays;
 
-public class ArrayList<E> implements List<E> {
+public class ArrayList<E> extends AbstractList<E> {
 
     private E[] arr;
-    private int size;
     public static final int DEFAULT_CAPACITY = 10;
-    public static final int ELEMENT_NOT_FOUND = -1;
-
     public ArrayList() {
         this(DEFAULT_CAPACITY);
     }
@@ -19,25 +16,6 @@ public class ArrayList<E> implements List<E> {
         this.size = 0;
     }
 
-    @Override
-    public int size() {
-        return this.size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return this.size == 0;
-    }
-
-    @Override
-    public boolean contains(E element) {
-        return indexOf(element) != ELEMENT_NOT_FOUND;
-    }
-
-    @Override
-    public void add(E element) {
-        add(size, element);
-    }
 
     @Override
     public E get(int index) {

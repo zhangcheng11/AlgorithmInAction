@@ -1,4 +1,4 @@
-package com.atstone.algorithm.stucture.array;
+package com.atstone.algorithm.stucture.list;
 
 public class ArrayListTest {
     public static void main(String[] args) {
