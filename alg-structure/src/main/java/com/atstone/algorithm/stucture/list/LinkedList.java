@@ -94,6 +94,7 @@ public class LinkedList<E> extends AbstractList<E> {
             this.element = element;
             this.next = next;
         }
+
     }
 
 
