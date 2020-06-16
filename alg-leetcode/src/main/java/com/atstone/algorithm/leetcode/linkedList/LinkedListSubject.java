@@ -1,6 +1,6 @@
-package com.atstone.algorithm.leetcode.array;
+package com.atstone.algorithm.leetcode.linkedList;
 
-public class Test {
+public class LinkedListSubject {
     public static void main(String[] args) {
     }
 
