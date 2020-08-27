@@ -5,6 +5,23 @@ public class LinkedListSubject {
     }
 
     /**
+     * 206. 反转链表
+     * 解题思路：双指针 + 临时节点
+     * https://leetcode-cn.com/problems/reverse-linked-list/
+     */
+    public ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode cur = head;
+        while (cur != null){
+            ListNode tmpNode = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = tmpNode;
+        }
+        return prev;
+    }
+
+    /**
      * 83. 删除排序链表中的重复元素
      * https://leetcode-cn.com/problems/remove-duplicates-from-sorted-list/
      */
