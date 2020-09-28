@@ -2,6 +2,7 @@ package com.atstone.algorithm.leetcode.linkedList;
 
 public class LinkedListSubject {
     public static void main(String[] args) {
+
     }
 
 
