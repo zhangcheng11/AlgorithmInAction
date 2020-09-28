@@ -4,6 +4,8 @@ public class LinkedListSubject {
     public static void main(String[] args) {
     }
 
+
+
     /**
      * 206. 反转链表
      * 解题思路：双指针 + 临时节点
