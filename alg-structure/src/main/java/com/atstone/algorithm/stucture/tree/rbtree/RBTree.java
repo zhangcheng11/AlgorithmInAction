@@ -123,7 +123,7 @@ public class RBTree<E> extends BBSTree<E> {
         if(left){//被删除的节点在左边，兄弟节点在右边
 
         }else{//被删除的节点在右边，兄弟节点在左边
-            if(isRed(sibling)){//兄弟节点是红色1111
+            if(isRed(sibling)){//兄弟节点是红色
 
             }
         }
