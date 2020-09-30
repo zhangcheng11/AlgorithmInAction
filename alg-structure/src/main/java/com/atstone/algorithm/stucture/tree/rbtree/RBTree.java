@@ -116,6 +116,7 @@ public class RBTree<E> extends BBSTree<E> {
         //删除的是根节点
         Node<E> parent = node.parent;
         if(parent == null) return;
+
         //判断被删除的node是左还是右
         boolean left = parent.left == null;
         Node<E> sibling = left ? parent.right : parent.left;
