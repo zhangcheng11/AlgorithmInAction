@@ -126,7 +126,6 @@ public class RBTree<E> extends BBSTree<E> {
 
             }
         }
-
     }
 
     private static class RBNode<E> extends Node<E> {
