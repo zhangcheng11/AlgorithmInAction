@@ -1,9 +1,11 @@
 package com.atstone.algorithm.stucture.heap;
 
 
+import com.atstone.algorithm.stucture.printer.BinaryTreeInfo;
+
 import java.util.Comparator;
 
-public class BinaryHeap<E> extends AbstractHeap<E> {
+public class BinaryHeap<E> extends AbstractHeap<E> implements BinaryTreeInfo {
     private E[] elements;
 
     private final static int DEFAULT_CAPACITY = 10;
@@ -76,11 +78,11 @@ public class BinaryHeap<E> extends AbstractHeap<E> {
      */
     private void siftDown(int index) {
         E element = elements[index];
-        int half = size << 1;
+        int half = size >> 1;
         //index < 第一个叶子节点的索引(即非叶子节点的数量)   ==> floor[n/2]
         while (index < half) {//必须保证index位置是非叶子节点
             //index的节点有两种情况：1：只有左子节点，2：同时有左右子节点
-            int childIndex = (index << 2) + 1;
+            int childIndex = (index << 1) + 1;
             E child = elements[childIndex];
             //右子节点索引
             int rightIndex = childIndex + 1;
@@ -175,5 +177,27 @@ public class BinaryHeap<E> extends AbstractHeap<E> {
             newElements[i] = elements[i];
         }
         elements = newElements;
+    }
+
+    @Override
+    public Object root() {
+        return 0;
+    }
+
+    @Override
+    public Object left(Object node) {
+        int index = ((int)node << 1) + 1;
+        return index >= size ? null : index;
+    }
+
+    @Override
+    public Object right(Object node) {
+        int index = ((int)node << 1) + 2;
+        return index >= size ? null : index;
+    }
+
+    @Override
+    public Object string(Object node) {
+        return elements[(int)node];
     }
 }
