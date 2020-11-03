@@ -52,9 +52,12 @@ public class SortSubject {
         return result;
     }
 
-
-    public void merge(int[] nums1, int m, int[] nums2, int n) {
-        int[] leftArr = new int[n];
+    /**
+     * 合并两个有序数组
+     * https://leetcode-cn.com/problems/merge-sorted-array/
+     */
+    public static void merge(int[] nums1, int m, int[] nums2, int n) {
+        int[] leftArr = new int[m];
         for (int i = 0; i < m; i++) {
             if(nums1[i] != 0){
                 leftArr[i] = nums1[i];
@@ -63,7 +66,7 @@ public class SortSubject {
         }
 
         int li = 0, ri = 0, ci = 0;
-        while (li < m + n && ci < m) {
+        while (ci < m) {
             if (ri < n && leftArr[ci] > nums2[ri]) {
                 nums1[li] = nums2[ri];
                 ri++;
@@ -74,10 +77,16 @@ public class SortSubject {
                 ci++;
             }
         }
+        for (int j = ri; j < n; j++) {
+            nums1[li++] = nums2[j];
+        }
+        System.out.println(Arrays.toString(nums1));
 
     }
 
     public static void main(String[] args) {
-
+        int[] a = {1,3,5,7,0,0,0};
+        int[] b = {3,8,9};
+        merge(a,4,b,3);
     }
 }
