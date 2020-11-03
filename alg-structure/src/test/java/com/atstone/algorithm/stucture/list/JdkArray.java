@@ -62,7 +62,6 @@ public class JdkArray {
     public static void main(String[] args) {
         //int[] a= {1,2,2};
         //uniqueOccurrences(a);
-
         //int[][] intervals = {{1, 3}, {2, 6}, {8, 10}, {15, 18}};
         //int[][] intervals = {{1, 4}, {2, 3}, {4, 5}, {8, 10}, {15, 18}};
         int[][] intervals = { {2, 3}, {4, 5}, {8, 10}, {1,10}};
