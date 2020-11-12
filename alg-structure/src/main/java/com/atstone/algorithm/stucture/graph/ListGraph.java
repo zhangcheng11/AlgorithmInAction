@@ -103,7 +103,8 @@ public class ListGraph<V, E> implements Graph<V, E> {
      * @param begin 搜索的起点
      */
     @Override
-    public void bfs(V begin) {
+    public void bfs(V begin,VertexVisitor<V> visitor) {
+        if(visitor == null) return;
         Vertex<V, E> beginVertex = vertexes.get(begin);
         if (beginVertex == null) return;
 
@@ -114,7 +115,8 @@ public class ListGraph<V, E> implements Graph<V, E> {
 
         while (!queue.isEmpty()) {
             Vertex<V, E> vertex = queue.poll();
-            System.out.println(vertex);
+            //System.out.println(vertex);
+            if(visitor.visit(vertex.value)) break;
             for (Edge<V, E> edge : vertex.outEdges) {
                 if (visitedVertexes.contains(edge.to)) continue;
                 queue.offer(edge.to);
@@ -129,22 +131,24 @@ public class ListGraph<V, E> implements Graph<V, E> {
      * @param begin 搜索的起点
      */
     @Override
-    public void dfs(V begin) {
+    public void dfs(V begin,VertexVisitor<V> visitor) {
+        if(visitor == null) return;
         Vertex<V, E> beginVertex = vertexes.get(begin);
         if (beginVertex == null) return;
 
         Set<Vertex<V, E>> visitedVertexes = new HashSet<>();
 
-        dfs(beginVertex, visitedVertexes);
+        dfs(beginVertex, visitedVertexes,visitor);
     }
 
-    private void dfs(Vertex<V, E> vertex, Set<Vertex<V, E>> visitedVertexes) {
-        System.out.println(vertex);
+    private void dfs(Vertex<V, E> vertex, Set<Vertex<V, E>> visitedVertexes,VertexVisitor<V> visitor) {
+        //System.out.println(vertex);
+        if(visitor.visit(vertex.value)) return;
         visitedVertexes.add(vertex);
 
         for (Edge<V, E> edge : vertex.outEdges) {
             if (visitedVertexes.contains(edge.to)) continue;
-            dfs(edge.to, visitedVertexes);
+            dfs(edge.to, visitedVertexes,visitor);
         }
     }
 
@@ -153,7 +157,8 @@ public class ListGraph<V, E> implements Graph<V, E> {
      *
      * @param begin 搜索的起点
      */
-    public void dfs2(V begin) {
+    public void dfs2(V begin,VertexVisitor<V> visitor) {
+        if(visitor == null) return;
         Vertex<V, E> beginVertex = vertexes.get(begin);
         if (beginVertex == null) return;
 
@@ -162,7 +167,8 @@ public class ListGraph<V, E> implements Graph<V, E> {
         Stack<Vertex<V,E>> stack = new Stack<>();
         stack.push(beginVertex);
         visitedVertexes.add(beginVertex);
-        System.out.println(beginVertex.value);
+        //System.out.println(beginVertex.value);
+        if(visitor.visit(beginVertex.value)) return;
 
         while(!stack.isEmpty()){
             Vertex<V, E> vertex = stack.pop();
@@ -173,7 +179,8 @@ public class ListGraph<V, E> implements Graph<V, E> {
                 stack.push(edge.from);
                 stack.push(edge.to);
                 visitedVertexes.add(edge.to);
-                System.out.println(edge.to.value);
+                //System.out.println(edge.to.value);
+                if(visitor.visit(edge.to.value)) return;
                 break;
             }
         }

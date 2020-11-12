@@ -48,10 +48,14 @@ public interface Graph<V,E> {
      * 广度优先搜索
      * @param begin  搜索的起点
      */
-     void bfs(V begin);
+     void bfs(V begin,VertexVisitor<V> visitor);
     /**
      * 深度优先搜索
      * @param begin  搜索的起点
      */
-    void dfs(V begin);
+    void dfs(V begin,VertexVisitor<V> visitor);
+
+    interface VertexVisitor<V>{
+        boolean visit(V value);
+    }
 }
