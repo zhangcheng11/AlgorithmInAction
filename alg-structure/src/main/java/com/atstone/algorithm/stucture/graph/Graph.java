@@ -1,5 +1,8 @@
 package com.atstone.algorithm.stucture.graph;
 
+import java.util.List;
+import java.util.Set;
+
 public interface Graph<V,E> {
     /**
      * 边的总数
@@ -55,7 +58,25 @@ public interface Graph<V,E> {
      */
     void dfs(V begin,VertexVisitor<V> visitor);
 
+    /**
+     * 拓扑排序
+     * @return
+     */
+    List<V> topologicalSort();
+
+    /**
+     * 最小生成树
+     * @return   最小生成树的边信息集合
+     */
+    Set<EdgeInfo<V,E>> mst();
+
     interface VertexVisitor<V>{
         boolean visit(V value);
+    }
+
+    class EdgeInfo<V,E>{
+        V from;
+        V to;
+        E weight;
     }
 }

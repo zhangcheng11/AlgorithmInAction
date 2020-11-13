@@ -1,5 +1,7 @@
 package com.atstone.algorithm.stucture.graph;
 
+import com.atstone.algorithm.stucture.heap.BinaryHeap;
+
 import java.util.*;
 
 /**
@@ -103,8 +105,8 @@ public class ListGraph<V, E> implements Graph<V, E> {
      * @param begin 搜索的起点
      */
     @Override
-    public void bfs(V begin,VertexVisitor<V> visitor) {
-        if(visitor == null) return;
+    public void bfs(V begin, VertexVisitor<V> visitor) {
+        if (visitor == null) return;
         Vertex<V, E> beginVertex = vertexes.get(begin);
         if (beginVertex == null) return;
 
@@ -116,7 +118,7 @@ public class ListGraph<V, E> implements Graph<V, E> {
         while (!queue.isEmpty()) {
             Vertex<V, E> vertex = queue.poll();
             //System.out.println(vertex);
-            if(visitor.visit(vertex.value)) break;
+            if (visitor.visit(vertex.value)) break;
             for (Edge<V, E> edge : vertex.outEdges) {
                 if (visitedVertexes.contains(edge.to)) continue;
                 queue.offer(edge.to);
@@ -131,24 +133,82 @@ public class ListGraph<V, E> implements Graph<V, E> {
      * @param begin 搜索的起点
      */
     @Override
-    public void dfs(V begin,VertexVisitor<V> visitor) {
-        if(visitor == null) return;
+    public void dfs(V begin, VertexVisitor<V> visitor) {
+        if (visitor == null) return;
         Vertex<V, E> beginVertex = vertexes.get(begin);
         if (beginVertex == null) return;
 
         Set<Vertex<V, E>> visitedVertexes = new HashSet<>();
 
-        dfs(beginVertex, visitedVertexes,visitor);
+        dfs(beginVertex, visitedVertexes, visitor);
     }
 
-    private void dfs(Vertex<V, E> vertex, Set<Vertex<V, E>> visitedVertexes,VertexVisitor<V> visitor) {
+    @Override
+    public List<V> topologicalSort() {
+        List<V> list = new ArrayList<>();
+        Queue<Vertex<V, E>> queue = new LinkedList<>();
+        Map<Vertex<V, E>, Integer> ins = new HashMap<>();
+        // 初始化（将度为0的节点都放入队列）
+        vertexes.forEach((V v, Vertex<V, E> vertex) -> {
+            int inDegree = vertex.inEdges.size();
+            if (inDegree == 0) {
+                queue.offer(vertex);
+            } else {
+                ins.put(vertex, inDegree);
+            }
+        });
+
+        while (!queue.isEmpty()) {
+            Vertex<V, E> vertex = queue.poll();
+            // 放入返回结果中
+            list.add(vertex.value);
+            for (Edge<V, E> edge : vertex.outEdges) {
+                int toInDegree = ins.get(edge.to) - 1;
+                if (toInDegree == 0) {
+                    queue.offer(edge.to);
+                } else {
+                    ins.put(edge.to, toInDegree);
+                }
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public Set<EdgeInfo<V, E>> mst() {
+        return prim();
+    }
+
+    /**
+     * 采用prim算法实现最小生成树
+     * @return  最小生成树的边信息结合
+     */
+    private Set<EdgeInfo<V, E>> prim() {
+        Iterator<Vertex<V, E>> iterator = vertexes.values().iterator();
+        if(!iterator.hasNext()) return null;
+        Vertex<V, E> vertex = iterator.next();
+
+        Set<EdgeInfo<V, E>> edgeInfos = new HashSet<>();
+        Set<Vertex<V, E>> addedVertexes = new HashSet<>();
+        addedVertexes.add(vertex);
+        int vertexSize = vertexes.size();
+
+
+        return null;
+    }
+
+    private Set<EdgeInfo<V, E>> kruskal() {
+        return null;
+    }
+
+    private void dfs(Vertex<V, E> vertex, Set<Vertex<V, E>> visitedVertexes, VertexVisitor<V> visitor) {
         //System.out.println(vertex);
-        if(visitor.visit(vertex.value)) return;
+        if (visitor.visit(vertex.value)) return;
         visitedVertexes.add(vertex);
 
         for (Edge<V, E> edge : vertex.outEdges) {
             if (visitedVertexes.contains(edge.to)) continue;
-            dfs(edge.to, visitedVertexes,visitor);
+            dfs(edge.to, visitedVertexes, visitor);
         }
     }
 
@@ -157,30 +217,30 @@ public class ListGraph<V, E> implements Graph<V, E> {
      *
      * @param begin 搜索的起点
      */
-    public void dfs2(V begin,VertexVisitor<V> visitor) {
-        if(visitor == null) return;
+    public void dfs2(V begin, VertexVisitor<V> visitor) {
+        if (visitor == null) return;
         Vertex<V, E> beginVertex = vertexes.get(begin);
         if (beginVertex == null) return;
 
         Set<Vertex<V, E>> visitedVertexes = new HashSet<>();
 
-        Stack<Vertex<V,E>> stack = new Stack<>();
+        Stack<Vertex<V, E>> stack = new Stack<>();
         stack.push(beginVertex);
         visitedVertexes.add(beginVertex);
         //System.out.println(beginVertex.value);
-        if(visitor.visit(beginVertex.value)) return;
+        if (visitor.visit(beginVertex.value)) return;
 
-        while(!stack.isEmpty()){
+        while (!stack.isEmpty()) {
             Vertex<V, E> vertex = stack.pop();
             //System.out.println(vertex);
 
-            for (Edge<V,E> edge : vertex.outEdges){
-                if(visitedVertexes.contains(edge.to)) continue;
+            for (Edge<V, E> edge : vertex.outEdges) {
+                if (visitedVertexes.contains(edge.to)) continue;
                 stack.push(edge.from);
                 stack.push(edge.to);
                 visitedVertexes.add(edge.to);
                 //System.out.println(edge.to.value);
-                if(visitor.visit(edge.to.value)) return;
+                if (visitor.visit(edge.to.value)) return;
                 break;
             }
         }
