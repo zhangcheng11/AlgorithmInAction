@@ -1,6 +1,5 @@
 package com.atstone.algorithm.stucture.graph;
 
-import com.atstone.algorithm.stucture.heap.BinaryHeap;
 
 import java.util.*;
 
@@ -13,6 +12,18 @@ import java.util.*;
 public class ListGraph<V, E> implements Graph<V, E> {
     private Map<V, Vertex<V, E>> vertexes = new HashMap<>();
     private Set<Edge<V, E>> edges = new HashSet<>();
+    private WeightManager<E> weightManager;
+
+    private Comparator<Edge<V, E>> edgeComparator = (Edge<V, E> e1, Edge<V, E> e2) -> {
+        return weightManager.compare(e1.weight, e2.weight);
+    };
+
+    public ListGraph() {
+    }
+
+    public ListGraph(WeightManager<E> weightManager) {
+        this.weightManager = weightManager;
+    }
 
     @Override
     public int edgesSize() {
@@ -176,29 +187,50 @@ public class ListGraph<V, E> implements Graph<V, E> {
 
     @Override
     public Set<EdgeInfo<V, E>> mst() {
-        return prim();
+        return Math.random() > 0.5 ? prim() : kruskal();
     }
 
     /**
      * 采用prim算法实现最小生成树
-     * @return  最小生成树的边信息结合
+     *
+     * @return 最小生成树的边信息结合
      */
     private Set<EdgeInfo<V, E>> prim() {
         Iterator<Vertex<V, E>> iterator = vertexes.values().iterator();
-        if(!iterator.hasNext()) return null;
+        if (!iterator.hasNext()) return null;
         Vertex<V, E> vertex = iterator.next();
 
         Set<EdgeInfo<V, E>> edgeInfos = new HashSet<>();
         Set<Vertex<V, E>> addedVertexes = new HashSet<>();
         addedVertexes.add(vertex);
         int vertexSize = vertexes.size();
-
-
-        return null;
+        MinHeap<Edge<V, E>> edgeMinHeap = new MinHeap<>(vertex.outEdges, edgeComparator);
+        while (!edgeMinHeap.isEmpty() && addedVertexes.size() < vertexSize) {
+            Edge<V, E> edge = edgeMinHeap.remove();
+            if (addedVertexes.contains(edge.to)) continue;
+            edgeInfos.add(edge.info());
+            addedVertexes.add(edge.to);
+            edgeMinHeap.addAll(edge.to.outEdges);
+        }
+        return edgeInfos;
     }
 
     private Set<EdgeInfo<V, E>> kruskal() {
-        return null;
+        int edgeSize = vertexes.size() - 1;
+        if(edgeSize == -1) return null;
+        Set<EdgeInfo<V,E>> edgeInfos = new HashSet<>();
+        MinHeap<Edge<V, E>> edgeMinHeap = new MinHeap<>(edges, edgeComparator);
+        UnionFind<Vertex<V, E>> uf = new UnionFind<>();
+        vertexes.forEach((V v, Vertex<V, E> vertex) -> {
+            uf.makeSet(vertex);
+        });
+        while (!edgeMinHeap.isEmpty() && edgeInfos.size() < edgeSize) {
+            Edge<V, E> edge = edgeMinHeap.remove();
+            if (uf.isSame(edge.from, edge.to)) continue;
+            edgeInfos.add(edge.info());
+            uf.union(edge.from, edge.to);
+        }
+        return edgeInfos;
     }
 
     private void dfs(Vertex<V, E> vertex, Set<Vertex<V, E>> visitedVertexes, VertexVisitor<V> visitor) {
@@ -246,6 +278,14 @@ public class ListGraph<V, E> implements Graph<V, E> {
         }
     }
 
+    public interface WeightManager<E> {
+        int compare(E w1, E w2);
+
+        E add(E w1, E w2);
+
+        E zero();
+    }
+
     private static class Vertex<V, E> {
         V value;
         Set<Edge<V, E>> inEdges = new HashSet<>();
@@ -285,6 +325,10 @@ public class ListGraph<V, E> implements Graph<V, E> {
             this.from = from;
             this.to = to;
             this.weight = weight;
+        }
+
+        EdgeInfo<V, E> info() {
+            return new EdgeInfo<>(from.value, to.value, weight);
         }
 
         @Override
