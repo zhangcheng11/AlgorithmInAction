@@ -190,6 +190,56 @@ public class ListGraph<V, E> implements Graph<V, E> {
         return Math.random() > 0.5 ? prim() : kruskal();
     }
 
+    @Override
+    public Map<V, E> shortestPath(V begin) {
+        Vertex<V, E> beginVertex = vertexes.get(begin);
+        if (beginVertex == null) return null;
+        Map<V, E> selectedPaths = new HashMap<>();
+        Map<Vertex<V, E>, E> paths = new HashMap<>();
+        //初始化
+        for (Edge<V, E> edge : beginVertex.outEdges) {
+            paths.put(edge.to, edge.weight);
+        }
+
+        while (!paths.isEmpty()) {
+            Map.Entry<Vertex<V, E>, E> minEntry = getMinPath(paths);
+            //minVeVertex离开桌面，
+            Vertex<V, E> minVeVertex = minEntry.getKey();
+            selectedPaths.put(minVeVertex.value, minEntry.getValue());
+            paths.remove(minVeVertex);
+            //对minVeVertex它的outEdges进行松弛操作
+            for (Edge<V, E> edge : minVeVertex.outEdges) {
+                //if(selectedPaths.containsKey(edge.to.value) || edge.to.equals(beginVertex)) continue;
+                if(selectedPaths.containsKey(edge.to.value) || edge.to.equals(beginVertex)) continue;
+                //以前的最短路径：beginVertex到edge.to的最短路径
+                //新的可选择的最短路径：beginVertex到edge.from 的最短路径 +  edge.weight
+                E newWeight = weightManager.add(minEntry.getValue(), edge.weight);
+                E oldWeight = paths.get(edge.to);
+                if (oldWeight == null || weightManager.compare(newWeight, oldWeight) < 0) {
+                    paths.put(edge.to, newWeight);
+                }
+            }
+        }
+        selectedPaths.remove(begin);
+        return selectedPaths;
+    }
+
+    private void relax() {
+
+    }
+
+    private Map.Entry<Vertex<V, E>, E> getMinPath(Map<Vertex<V, E>, E> paths) {
+        Iterator<Map.Entry<Vertex<V, E>, E>> iterator = paths.entrySet().iterator();
+        Map.Entry<Vertex<V, E>, E> minEntry = iterator.next();
+        while (iterator.hasNext()) {
+            Map.Entry<Vertex<V, E>, E> entry = iterator.next();
+            if (weightManager.compare(entry.getValue(), minEntry.getValue()) < 0) {
+                minEntry = entry;
+            }
+        }
+        return minEntry;
+    }
+
     /**
      * 采用prim算法实现最小生成树
      *
@@ -217,8 +267,8 @@ public class ListGraph<V, E> implements Graph<V, E> {
 
     private Set<EdgeInfo<V, E>> kruskal() {
         int edgeSize = vertexes.size() - 1;
-        if(edgeSize == -1) return null;
-        Set<EdgeInfo<V,E>> edgeInfos = new HashSet<>();
+        if (edgeSize == -1) return null;
+        Set<EdgeInfo<V, E>> edgeInfos = new HashSet<>();
         MinHeap<Edge<V, E>> edgeMinHeap = new MinHeap<>(edges, edgeComparator);
         UnionFind<Vertex<V, E>> uf = new UnionFind<>();
         vertexes.forEach((V v, Vertex<V, E> vertex) -> {
