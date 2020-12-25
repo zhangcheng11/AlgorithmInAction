@@ -141,7 +141,6 @@ public class SortSubject {
             nums[maxIndex] = nums[end];
             nums[end] = tmp;
         }
-
     }
 
     /**

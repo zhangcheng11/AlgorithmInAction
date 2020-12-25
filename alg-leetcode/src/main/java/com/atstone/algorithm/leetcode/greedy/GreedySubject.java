@@ -79,7 +79,7 @@ public class GreedySubject {
     }
 
     public static int findMinArrowShots(int[][] points) {
-        if(points == null|| points.length == 0 || (points.length == 1 && points[0] == null)) return 0;
+        if (points == null || points.length == 0 || (points.length == 1 && points[0] == null)) return 0;
         Arrays.sort(points, (int[] o1, int[] o2) -> {
             if (o1[1] > o2[1]) {
                 return 1;
@@ -92,9 +92,9 @@ public class GreedySubject {
         int total = 0;
         int prev = points[0][1];
         for (int i = 1; i < points.length; i++) {
-            if(points[i][0] <= prev){
+            if (points[i][0] <= prev) {
                 total++;
-            }else{
+            } else {
                 prev = points[i][1];
             }
         }
@@ -103,18 +103,19 @@ public class GreedySubject {
 
     /**
      * 605. 种花问题 :https://leetcode-cn.com/problems/can-place-flowers/
-     * @param flowerbed  给定数组（花坛）
-     * @param n    需要种的花数量
-     * @return     是否能按规则种下这n朵花
+     *
+     * @param flowerbed 给定数组（花坛）
+     * @param n         需要种的花数量
+     * @return 是否能按规则种下这n朵花
      */
     public static boolean canPlaceFlowers(int[] flowerbed, int n) {
         int i = 0, count = 0;
-        while (i <  flowerbed.length) {
-            if (flowerbed[i] == 0 && (i == 0 || flowerbed[i -1] == 0) && (i == flowerbed.length - 1 || flowerbed[i + 1] == 0)) {
+        while (i < flowerbed.length) {
+            if (flowerbed[i] == 0 && (i == 0 || flowerbed[i - 1] == 0) && (i == flowerbed.length - 1 || flowerbed[i + 1] == 0)) {
                 flowerbed[i] = 1;
                 count++;
             }
-            if(count >= n) return true;
+            if (count >= n) return true;
             i++;
         }
         return false;
@@ -122,29 +123,67 @@ public class GreedySubject {
 
     /**
      * 763. 划分字母区间:https://leetcode-cn.com/problems/partition-labels/
-     * @param s   "ababcbacadefegdehijhklij"
-     * @return    切片长度列表
+     *
+     * @param s "ababcbacadefegdehijhklij"
+     * @return 切片长度列表
      */
     public static List<Integer> partitionLabels(String s) {
         List<Integer> list = new ArrayList<>();
         int begin = 0;
         int end = 0;
-        do{
+        do {
             int i = begin;
             char c = s.charAt(begin);
             end = s.lastIndexOf(c);
-            while (i < end){
+            while (i < end) {
                 char c1 = s.charAt(i);
                 int i1 = s.lastIndexOf(c1);
-                if(i1 > end) end = i1;
+                if (i1 > end) end = i1;
                 i++;
             }
-            String substring = s.substring(begin, end+1);
+            String substring = s.substring(begin, end + 1);
             System.out.println(substring);
             list.add(substring.length());
             begin = end + 1;
-        }while (begin < s.length() && end < s.length());
+        } while (begin < s.length() && end < s.length());
         return list;
+    }
+
+
+    public static int[] twoSum(int[] numbers, int target) {
+        int[] twoArr = new int[2];
+        int l = 0;
+        int r = numbers.length - 1;
+        //if(r - l < 2)  return numbers;
+        while (l < r) {
+            int sum = numbers[l] + numbers[r];
+            if (sum < target) {
+                l++;
+            } else if (sum > target) {
+                r--;
+            } else {
+                twoArr[0] = l + 1;
+                twoArr[1] = r + 1;
+                break;
+            }
+        }
+        return twoArr;
+    }
+
+    public static void merge(int[] nums1, int m, int[] nums2, int n) {
+        int pm = m - 1;
+        int pn = n - 1;
+        int pos = m + n - 1;
+        while (pm >= 0 && pn >= 0) {
+            if (nums1[pm] >= nums2[pn]) {
+                nums1[pos--] = nums1[pm--];
+            } else {
+                nums1[pos--] = nums2[pn--];
+            }
+        }
+        while (pn >= 0) {
+            nums1[pos--] = nums2[pn--];
+        }
     }
 
     public static void main(String[] args) {
@@ -166,8 +205,19 @@ public class GreedySubject {
         int minArrowShots = findMinArrowShots(points);
         System.out.println(minArrowShots);*/
 
-       String s = "ababcbacadefegdehijhklij";
+        /*String s = "ababcbacadefegdehijhklij";
         List<Integer> integers = partitionLabels(s);
-        System.out.println(integers);
+        System.out.println(integers);*/
+
+        /*int[] numbers = {-1,0};
+        int target = -1;
+        int[] ints = twoSum(numbers, target);
+        System.out.println(Arrays.toString(ints));*/
+
+        int[] nums1 = {1, 2, 3, 0, 0, 0};
+        int[] nums2 = {2, 5, 6};
+        int n = 3, m = 3;
+        merge(nums1, m, nums2, n);
+        System.out.println(Arrays.toString(nums1));
     }
 }
